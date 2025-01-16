@@ -27,7 +27,7 @@ export function PriceChart() {
   const [priceData, setPriceData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [lastUpdate, setLastUpdate] = useState(null);
-  const [countdown, setCountdown] = useState(30);
+  //   const [countdown, setCountdown] = useState(30);
 
   const fetchData = async () => {
     try {
@@ -38,7 +38,7 @@ export function PriceChart() {
       const data = await response.json();
       setPriceData(data);
       setLastUpdate(new Date());
-      setCountdown(30);
+      //   setCountdown(30);
     } catch (error) {
       console.error("Error fetching price data:", error);
     } finally {
@@ -49,7 +49,7 @@ export function PriceChart() {
   useEffect(() => {
     fetchData();
     // Fetch every 30 seconds
-    const interval = setInterval(fetchData, 30000);
+    const interval = setInterval(fetchData, 5 * 60 * 1000);
     return () => clearInterval(interval);
   }, []);
 
@@ -168,8 +168,16 @@ export function PriceChart() {
           </button>
         </div>
         <div className="flex items-center justify-end w-full gap-2 text-sm text-[#848E9C]">
-          <span> {countdown}</span>
-          <button
+          {/* only time */}
+          <span>
+            {" "}
+            As of{" "}
+            {lastUpdate?.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </span>
+          {/* <button
             onClick={fetchData}
             className="px-2 py-1 rounded bg-[#2B2F36] hover:bg-[#2B2F36]/80 text-[#F0B90B]"
             disabled={isLoading}
@@ -188,7 +196,7 @@ export function PriceChart() {
                 d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
               />
             </svg>
-          </button>
+          </button> */}
         </div>
       </div>
       <Line options={options} data={data} />
