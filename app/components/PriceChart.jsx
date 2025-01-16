@@ -121,9 +121,9 @@ export function PriceChart() {
         // Add padding to y-axis
         beginAtZero: false,
         suggestedMin:
-          Math.min(...priceData.map((p) => p[`${activeChart}-price`])) * 0.999,
+          Math.min(...priceData.map((p) => p[`${activeChart}-price`])) * 0.9999,
         suggestedMax:
-          Math.max(...priceData.map((p) => p[`${activeChart}-price`])) * 1.001,
+          Math.max(...priceData.map((p) => p[`${activeChart}-price`])) * 1.0001,
       },
     },
   };
