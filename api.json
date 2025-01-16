@@ -1,0 +1,508 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 0],
+      "id": "e836b3b7-dfed-4890-b0cb-4ac67741d7de",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1jRc7mIgs6sIBn6somk1tTgaai8aUH-bw1UvsKl84TBI",
+          "mode": "list",
+          "cachedResultName": "dzd sqaure price",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jRc7mIgs6sIBn6somk1tTgaai8aUH-bw1UvsKl84TBI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jRc7mIgs6sIBn6somk1tTgaai8aUH-bw1UvsKl84TBI/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "time": "={{ $now.toISO() }}",
+            "sell-price": "={{ $json.current_sell_price }}",
+            "buy-price": "={{ $('Set Current Buy Price').item.json.current_buy_price }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "time",
+              "displayName": "time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "buy-price",
+              "displayName": "buy-price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "sell-price",
+              "displayName": "sell-price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [1340, 80],
+      "id": "b8112f14-a53f-4d31-870a-160b9c74d7c8",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "WuEISYB4LI0VNg2m",
+          "name": "s_rahim"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1jRc7mIgs6sIBn6somk1tTgaai8aUH-bw1UvsKl84TBI",
+          "mode": "list",
+          "cachedResultName": "dzd sqaure price",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jRc7mIgs6sIBn6somk1tTgaai8aUH-bw1UvsKl84TBI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jRc7mIgs6sIBn6somk1tTgaai8aUH-bw1UvsKl84TBI/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [200, 440],
+      "id": "25d53187-518e-45fe-a932-2a30164e3b00",
+      "name": "Google Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "WuEISYB4LI0VNg2m",
+          "name": "s_rahim"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"fiat\": \"DZD\",\n  \"page\": 1,\n  \"rows\": 10,\n  \"tradeType\": \"BUY\",\n  \"asset\": \"USDT\",\n  \"countries\": [],\n  \"proMerchantAds\": false,\n  \"shieldMerchantAds\": false,\n  \"filterType\": \"all\",\n  \"periods\": [],\n  \"additionalKycVerifyFilter\": 0,\n  \"publisherType\": null,\n  \"payTypes\": [\n    \"AlgerieBaridimob\"\n  ],\n  \"classifies\": [\n    \"mass\",\n    \"profession\",\n    \"fiat_trade\"\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 0],
+      "id": "06bf7233-dd1d-4958-b0ed-8d72834c29b7",
+      "name": "Get Buy Orders from binance API"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [440, 0],
+      "id": "e11be73e-3d03-4556-b405-2f0d5d288dbe",
+      "name": "Split Buy Orders"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "af5426b0-3430-410a-b90b-cdaf5a8dad1c",
+              "leftValue": "={{ $json.adv.asset }}",
+              "rightValue": "USDT",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "9c905fb7-da77-4318-8cc1-cf3353aa6c18",
+              "leftValue": "={{ $json.adv.fiatUnit }}",
+              "rightValue": "DZD",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "ebebe975-c396-4f13-884f-701946b0b2ed",
+              "leftValue": "={{ $json.adv.tradeMethods[0].payType }}",
+              "rightValue": "AlgerieBaridimob",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "f64cd36f-e758-4be7-86a5-dac53c48c3d6",
+              "leftValue": "={{ $json.adv.tradableQuantity }}",
+              "rightValue": 100,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [640, 0],
+      "id": "5a87b0e6-7175-4d80-8b6d-159f0e680bdf",
+      "name": "Filter Buy Orders"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "order",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [860, 0],
+      "id": "b0f91c71-e482-4c8c-8d97-dc4701a94cc0",
+      "name": "Aggregate Buy Orders"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bfff9ba7-7505-4281-bf0e-3eaa7608cd96",
+              "name": "current_buy_price",
+              "value": "={{ $json.order[0].adv.price }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1040, 0],
+      "id": "de100cb2-4d01-492e-bf9f-73287da5019e",
+      "name": "Set Current Buy Price"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"fiat\": \"DZD\",\n  \"page\": 1,\n  \"rows\": 10,\n  \"tradeType\": \"SELL\",\n  \"asset\": \"USDT\",\n  \"countries\": [],\n  \"proMerchantAds\": false,\n  \"shieldMerchantAds\": false,\n  \"filterType\": \"all\",\n  \"periods\": [],\n  \"additionalKycVerifyFilter\": 0,\n  \"publisherType\": null,\n  \"payTypes\": [\n    \"AlgerieBaridimob\"\n  ],\n  \"classifies\": [\n    \"mass\",\n    \"profession\",\n    \"fiat_trade\"\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [180, 200],
+      "id": "4aef683b-6e13-4ba9-b602-07a95219f3d0",
+      "name": "Get Sell Orders from binance API"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [400, 200],
+      "id": "2d67d647-3fc0-4fb0-a119-70cf10ff4373",
+      "name": "Split Sell Orders"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "af5426b0-3430-410a-b90b-cdaf5a8dad1c",
+              "leftValue": "={{ $json.adv.asset }}",
+              "rightValue": "USDT",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "9c905fb7-da77-4318-8cc1-cf3353aa6c18",
+              "leftValue": "={{ $json.adv.fiatUnit }}",
+              "rightValue": "DZD",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "ebebe975-c396-4f13-884f-701946b0b2ed",
+              "leftValue": "={{ $json.adv.tradeMethods[0].payType }}",
+              "rightValue": "AlgerieBaridimob",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "f64cd36f-e758-4be7-86a5-dac53c48c3d6",
+              "leftValue": "={{ $json.adv.tradableQuantity }}",
+              "rightValue": 100,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [600, 200],
+      "id": "ac459df6-97f3-4eb5-9ffd-2348458c8450",
+      "name": "Filter Sell Orders"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "order",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [820, 200],
+      "id": "bda0a455-1c6c-4e31-bde0-cce295da538f",
+      "name": "Aggregate Sell Orders"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bfff9ba7-7505-4281-bf0e-3eaa7608cd96",
+              "name": "current_sell_price",
+              "value": "={{ $json.order[0].adv.price }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1000, 200],
+      "id": "f9af133b-1955-4523-9397-19a3ac4e0007",
+      "name": "Set Current Sell Price"
+    },
+    {
+      "parameters": {
+        "path": "get-price",
+        "responseMode": "lastNode",
+        "responseData": "allEntries",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [-20, 440],
+      "id": "721c3ca3-9694-4237-b7a3-d5472bffd303",
+      "name": "get-price Webhook",
+      "webhookId": "4c685274-86ac-45b1-854b-b81e43c00958"
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Buy Orders from binance API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Buy Orders from binance API": {
+      "main": [
+        [
+          {
+            "node": "Split Buy Orders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Buy Orders": {
+      "main": [
+        [
+          {
+            "node": "Filter Buy Orders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Buy Orders": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Buy Orders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Buy Orders": {
+      "main": [
+        [
+          {
+            "node": "Set Current Buy Price",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Current Buy Price": {
+      "main": [
+        [
+          {
+            "node": "Get Sell Orders from binance API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Sell Orders from binance API": {
+      "main": [
+        [
+          {
+            "node": "Split Sell Orders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Sell Orders": {
+      "main": [
+        [
+          {
+            "node": "Filter Sell Orders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Sell Orders": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Sell Orders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Sell Orders": {
+      "main": [
+        [
+          {
+            "node": "Set Current Sell Price",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Current Sell Price": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get-price Webhook": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {}
+}

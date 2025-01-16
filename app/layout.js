@@ -12,7 +12,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "DZD Prica Binance P2P",
+  title: "DZD Price Binance P2P",
   description: "Price of DZD in USDT on Binance P2P",
 };
 
