@@ -12,7 +12,7 @@ export default function Home() {
           height={24}
         />
         <h1 className="text-2xl font-bold text-[#F0B90B]">
-          Binance p2p USDT/DZD Price
+          DZD/USDT on Binance P2P
         </h1>
       </div>
       <div className="w-full max-w-4xl h-[60vh]">
