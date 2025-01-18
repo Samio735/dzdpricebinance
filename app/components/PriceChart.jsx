@@ -24,7 +24,7 @@ ChartJS.register(
 
 export function PriceChart() {
   const [activeChart, setActiveChart] = useState("buy"); // 'buy' or 'sell'
-  const [timeRange, setTimeRange] = useState("1h");
+  const [timeRange, setTimeRange] = useState("24h"); // Changed default from "1h" to "24h"
   const [priceData, setPriceData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [lastUpdate, setLastUpdate] = useState(null);
