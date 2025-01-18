@@ -79,13 +79,13 @@ export function PriceChart() {
 
     // Reduce data points based on time range
     if (timeRange === "24h") {
-      filtered = filtered.filter((_, index) => index % 1 === 0);
+      filtered = filtered.filter((_, index) => index % 2 === 0);
     } else if (timeRange === "7d") {
-      filtered = filtered.filter((_, index) => index % 5 === 0);
+      filtered = filtered.filter((_, index) => index % 3 === 0);
     } else if (timeRange === "30d") {
-      filtered = filtered.filter((_, index) => index % 10 === 0);
+      filtered = filtered.filter((_, index) => index % 20 === 0);
     } else if (timeRange === "all") {
-      filtered = filtered.filter((_, index) => index % 30 === 0);
+      filtered = filtered.filter((_, index) => index % 50 === 0);
     }
 
     return filtered;
