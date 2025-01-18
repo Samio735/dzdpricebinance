@@ -24,6 +24,7 @@ ChartJS.register(
 
 export function PriceChart() {
   const [activeChart, setActiveChart] = useState("buy"); // 'buy' or 'sell'
+  const [timeRange, setTimeRange] = useState("1h");
   const [priceData, setPriceData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [lastUpdate, setLastUpdate] = useState(null);
@@ -60,8 +61,49 @@ export function PriceChart() {
     return () => clearInterval(timer);
   }, []);
 
+  const filterDataByTimeRange = (data) => {
+    const now = new Date();
+    const ranges = {
+      "1h": 60 * 60 * 1000,
+      "24h": 24 * 60 * 60 * 1000,
+      "7d": 7 * 24 * 60 * 60 * 1000,
+      "30d": 30 * 24 * 60 * 60 * 1000,
+      all: Infinity,
+    };
+
+    const cutoff = now.getTime() - ranges[timeRange];
+    let filtered =
+      timeRange === "all"
+        ? data
+        : data.filter((p) => new Date(p.time).getTime() > cutoff);
+
+    // Reduce data points based on time range
+    if (timeRange === "24h") {
+      filtered = filtered.filter((_, index) => index % 1 === 0);
+    } else if (timeRange === "7d") {
+      filtered = filtered.filter((_, index) => index % 5 === 0);
+    } else if (timeRange === "30d") {
+      filtered = filtered.filter((_, index) => index % 10 === 0);
+    } else if (timeRange === "all") {
+      filtered = filtered.filter((_, index) => index % 30 === 0);
+    }
+
+    return filtered;
+  };
+
+  const filteredData = filterDataByTimeRange(priceData);
+
   const options = {
     responsive: true,
+    elements: {
+      point: {
+        radius: 0, // remove points
+        hitRadius: 10, // area around line that will register hover
+      },
+      line: {
+        borderWidth: 2, // make line slightly thicker
+      },
+    },
     plugins: {
       legend: {
         display: false,
@@ -103,7 +145,7 @@ export function PriceChart() {
           color: "#848E9C",
           maxTicksLimit: 6, // limit number of ticks
           callback: function (value, index, ticks) {
-            const time = new Date(priceData[index].time);
+            const time = new Date(filteredData[index].time);
             return time.toLocaleTimeString([], {
               hour: "2-digit",
               minute: "2-digit",
@@ -121,30 +163,34 @@ export function PriceChart() {
         // Add padding to y-axis
         beginAtZero: false,
         suggestedMin:
-          Math.min(...priceData.map((p) => p[`${activeChart}-price`])) * 0.9999,
+          Math.min(...filteredData.map((p) => p[`${activeChart}-price`])) *
+          0.9999,
         suggestedMax:
-          Math.max(...priceData.map((p) => p[`${activeChart}-price`])) * 1.0001,
+          Math.max(...filteredData.map((p) => p[`${activeChart}-price`])) *
+          1.0001,
       },
     },
   };
 
   const data = {
-    labels: priceData.map((p) => new Date(p.time).getTime()), // use timestamps as labels
+    labels: filteredData.map((p) => new Date(p.time).getTime()), // use timestamps as labels
     datasets: [
       {
         label: activeChart === "buy" ? "Buy Price" : "Sell Price",
-        data: priceData.map((p) => p[`${activeChart}-price`]),
+        data: filteredData.map((p) => p[`${activeChart}-price`]),
         borderColor: "#F0B90B",
         backgroundColor: "rgba(240, 185, 11, 0.1)",
         tension: 0.1,
         fill: true,
+        pointRadius: 0,
+        borderWidth: 2,
       },
     ],
   };
 
   const currentPrice =
-    priceData.length > 0
-      ? priceData[priceData.length - 1][`${activeChart}-price`]
+    filteredData.length > 0
+      ? filteredData[filteredData.length - 1][`${activeChart}-price`]
       : null;
 
   return (
@@ -162,6 +208,22 @@ export function PriceChart() {
 
         {/* Chart Controls */}
         <div className="flex flex-col items-center gap-4 w-full">
+          {/* Time Range Selector */}
+          <div className="flex gap-2 justify-center">
+            {["1h", "24h", "7d", "30d", "all"].map((range) => (
+              <button
+                key={range}
+                onClick={() => setTimeRange(range)}
+                className={`px-3 py-1 rounded text-sm ${
+                  timeRange === range
+                    ? "bg-[#F0B90B] text-[#1E2026]"
+                    : "bg-[#2B2F36] text-[#848E9C] hover:bg-[#2B2F36]/80"
+                }`}
+              >
+                {range.toUpperCase()}
+              </button>
+            ))}
+          </div>
           <div className="flex gap-4 justify-center">
             <button
               onClick={() => setActiveChart("buy")}
