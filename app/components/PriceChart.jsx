@@ -121,11 +121,20 @@ export function PriceChart() {
         callbacks: {
           title: function (context) {
             const timestamp = context[0].label;
-            return new Date(Number(timestamp)).toLocaleString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-              second: "2-digit",
-            });
+            const date = new Date(Number(timestamp));
+            return (
+              date.toLocaleDateString([], {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              }) +
+              " " +
+              date.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+              })
+            );
           },
           label: function (context) {
             return `${
@@ -146,10 +155,17 @@ export function PriceChart() {
           maxTicksLimit: 6, // limit number of ticks
           callback: function (value, index, ticks) {
             const time = new Date(filteredData[index].time);
-            return time.toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            });
+            if (timeRange === "1h" || timeRange === "24h") {
+              return time.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              });
+            } else {
+              return time.toLocaleDateString([], {
+                month: "short",
+                day: "numeric",
+              });
+            }
           },
         },
       },
